@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
+use App\Models\Paquete;
+use App\Models\Lote;
+use App\Models\PaqueteLote;
+
 class LoteController extends Controller
 {
     public function CrearPaqueteLote($request, $idAutomatico)
