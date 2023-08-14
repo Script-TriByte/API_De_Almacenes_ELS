@@ -35,4 +35,14 @@ class PaqueteController extends Controller
 
         return [ "mensaje" => "Paquete creado correctamente." ];
     }
+
+    public function AsignarPeso(Request $request, $idPaquete)
+    {
+        $paquete = Paquete::findOrFail($idPaquete);
+
+        $paquete->peso = $request->input("peso");
+        $paquete->save();
+
+        return [ "mensaje" => "Se ha asignado el peso al Paquete $idPaquete correctamente." ];
+    }
 }

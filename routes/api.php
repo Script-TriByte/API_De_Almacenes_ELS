@@ -14,4 +14,8 @@ Route::prefix('v1')->group(function ()
     Route::post('/Paquetes',
         [PaqueteController::class, "CrearPaquete"]
     );
+
+    Route::put('/Paquetes/{idPaquete}',
+        [PaqueteController::class,"AsignarPeso"]
+    );
 });
