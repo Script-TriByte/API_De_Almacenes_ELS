@@ -40,7 +40,25 @@ class LoteController extends Controller
         $lote = Lote::findOrFail($idLote);
         $lote->delete();
 
+        $relacionLotePaquete = PaqueteLote::where('idLote', $idLote) -> get();
+        $relacionLotePaquete::delete();
+
         return [ "mensaje" => "El lote con el id $idLote fue eliminado correctamente." ];
     }
 
+    public function SacarPaqueteDelLote(Request $request, $idLote, $idPaquete)
+    {
+        $lote = Lote::findOrFail($idLote);
+        $paquete = PaqueteLote::where('idPaquete', $idPaquete) -> get();
+
+        if($lote -> $idLote === $paquete -> $idPaquete){
+            $paquete::delete();
+            $lote->save();
+            $paquete->save();
+
+            return [ "mensahe" => "El paquete se extrajo correctamente"];
+        } 
+
+        return [ "mensaje" => "El paquete ingresado no existe en ese lote."];
+    }
 }

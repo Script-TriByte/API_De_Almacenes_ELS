@@ -23,4 +23,12 @@ Route::prefix('v1')->group(function ()
     Route::post('/Lotes',
         [LoteController::class, "CrearLote"]
     );
+
+    Route::delete('/Lotes/{idLote}',
+        [LoteController::class, "EliminarLote"]
+    );
+
+    Route::delete('/Lotes/{idLote}/{idPaquete}', 
+        [LoteController::class, "SacarPaqueteDelLote"]
+    );
 });
