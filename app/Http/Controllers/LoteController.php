@@ -34,4 +34,13 @@ class LoteController extends Controller
 
         return [ "mensaje" => "Lote creado correctamente." ];
     }
+
+    public function EliminarLote(Request $request, $idLote)
+    {
+        $lote = Lote::findOrFail($idLote);
+        $lote->delete();
+
+        return [ "mensaje" => "El lote con el id $idLote fue eliminado correctamente." ];
+    }
+
 }
