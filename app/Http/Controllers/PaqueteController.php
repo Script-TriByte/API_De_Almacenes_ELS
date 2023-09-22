@@ -3,13 +3,29 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 use App\Models\Articulo;
 use App\Models\Paquete;
 use App\Models\ArticuloPaquete;
+use App\Models\PaqueteLote;
+use App\Models\PaqueteCodigoDeBulto;
+use App\Models\Estanteria;
+use App\Models\PaqueteEstanteria;
+
 
 class PaqueteController extends Controller
 {
+    public function BloquearTablas()
+    {
+        DB::raw('LOCK TABLE paquetes WRITE');
+        DB::raw('LOCK TABLE articulos READ');
+        DB::raw('LOCK TABLE articulo_paquete WRITE');
+        DB::raw('LOCK TABLE paquete_lote WRITE');
+        DB::raw('LOCK TABLE paquete_estanteria WRITE');
+    }
+
     public function CrearArticuloPaquete($request, $idAutomatico)
     {
         ArticuloPaquete::create([
@@ -17,12 +33,32 @@ class PaqueteController extends Controller
             "idPaquete" => $idAutomatico
         ]);
     }
+
+    public function CrearPaqueteCodigoDeBulto($idAutomatico, $codigoDeBulto)
+    {
+        PaqueteCodigoDeBulto::create([
+            "idPaquete" => $idAutomatico,
+            "codigo" => $codigoDeBulto
+        ]);
+    }
     
     public function CrearPaquete(Request $request)
     {
+        $validation = Validator::make($request->all(),[
+            'idArticulo' => 'required|numeric',
+            'cantidadArticulos' => 'required|numeric',
+            'codigoDeBulto' => 'required|numeric'
+        ]);
+
+        if($validation->fails())
+            return response($validation->errors(), 401);
+
         $idArticulo = $request->input("idArticulo");
 
         Articulo::findOrFail($idArticulo);
+
+        $this -> BloquearTablas();
+        DB::beginTransaction();
 
         $modeloTablaPaquete = Paquete::create([
             "cantidadArticulos" => $request->input("cantidadArticulos"),
@@ -32,17 +68,64 @@ class PaqueteController extends Controller
         $idAutomatico = $modeloTablaPaquete->idPaquete;
 
         $this->CrearArticuloPaquete($request, $idAutomatico);
+        $this->CrearPaqueteCodigoDeBulto($idAutomatico, $request->input('codigoDeBulto'));
+
+        DB::commit();
+        DB::raw('UNLOCK TABLES');
 
         return [ "mensaje" => "Paquete creado correctamente." ];
     }
 
     public function AsignarPeso(Request $request, $idPaquete)
     {
+        $validation = Validator::make($request->all(),[
+            'idPaquete' => 'required|numeric',
+            'peso' => 'required|numeric'
+        ]);
+
+        if($validation->fails())
+            return response($validation->errors(), 401);
+
         $paquete = Paquete::findOrFail($idPaquete);
+
+        $this -> BloquearTablas();
+        DB::beginTransaction();
 
         $paquete->peso = $request->input("peso");
         $paquete->save();
 
+        DB::commit();
+        DB::raw('UNLOCK TABLES');
+
         return [ "mensaje" => "Se ha asignado el peso al Paquete $idPaquete correctamente." ];
+    }
+
+    public function AsignarAEstanteria(Request $request, $idPaquete, $idEstanteria)
+    {
+        $validation = Validator::make(['idPaquete' => $idPaquete, 'idEstanteria' => $idEstanteria],[
+            'idPaquete' => 'required|numeric',
+            'idEstanteria' => 'required|numeric'
+        ]);
+
+        if($validation->fails())
+            return response($validation->errors(), 401);
+
+        Paquete::findOfFail($idPaquete);
+        Estanteria::findOrFail($idEstanteria);
+
+        $this -> BloquearTablas();
+        DB::beginTransaction();
+
+        PaqueteEstanteria::create([
+            "idPaquete" => $idPaquete,
+            "idEstanteria" => $idEstanteria
+        ]);
+
+        PaqueteLote::where('idPaquete', $idPaquete)->delete();
+
+        DB::commit();
+        DB::raw('UNLOCK TABLES');
+
+        return [ "mensaje" => "Se ha asignado a la estanteria correctamente." ];
     }
 }

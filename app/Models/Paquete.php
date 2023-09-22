@@ -11,7 +11,7 @@ class Paquete extends Model
 
     protected $primaryKey = 'idPaquete';
 
-    protected $table = 'Paquetes';
+    protected $table = 'paquetes';
 
     protected $fillable = [
         'idPaquete',

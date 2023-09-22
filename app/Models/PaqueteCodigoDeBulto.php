@@ -4,18 +4,19 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
-class ArticuloPaquete extends Model
+class PaqueteCodigoDeBulto extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $primaryKey = 'idRelacion';
 
-    protected $table = 'articulo_paquete';
+    protected $table = 'paquete_codigoDeBulto';
 
     protected $fillable = [
         'idRelacion',
-        'idArticulo',
-        'idPaquete'
+        'idPaquete',
+        'codigo'
     ];
 }

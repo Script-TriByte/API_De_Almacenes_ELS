@@ -15,7 +15,7 @@ class Articulo extends Model
 
     protected $primaryKey = 'idArticulo';
 
-    protected $table = 'Articulos';
+    protected $table = 'articulos';
 
     protected $fillable = [
         'idArticulo',
