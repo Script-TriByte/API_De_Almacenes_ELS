@@ -6,17 +6,17 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class PaqueteLote extends Model
+class VehiculoLoteDestino extends Model
 {
     use HasFactory, SoftDeletes;
 
-    protected $primaryKey = 'idRelacion';
+    protected $primaryKey = 'idLote';
 
-    protected $table = 'paquete_lote';
+    protected $table = 'vehiculo_lote_destino';
 
     protected $fillable = [
-        'idRelacion',
-        'idPaquete',
-        'idLote'
+        'fechaEstimada',
+        'horaEstimada',
+        'docDeIdentidad'
     ];
 }

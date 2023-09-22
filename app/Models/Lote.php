@@ -8,15 +8,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Lote extends Model
 {
-    use HasFactory;
-    use SoftDeletes;
+    use HasFactory, SoftDeletes;
 
     protected $primaryKey = 'idLote';
 
-    protected $table = 'Lotes';
+    protected $table = 'lotes';
 
     protected $fillable = [
         'idLote',
-        'cantidadPaquetes'
+        'cantidadPaquetes',
+        'idDestino',
+        'idAlmacen'
     ];
 }
