@@ -10,6 +10,11 @@ class Lote extends Model
 {
     use HasFactory, SoftDeletes;
 
+    public function paquetes()
+    {
+        return $this->hasMany(Paquete::class, 'idPaquete');
+    }
+
     protected $primaryKey = 'idLote';
 
     protected $table = 'lotes';

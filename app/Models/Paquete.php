@@ -21,6 +21,14 @@ class Paquete extends Model
 
     public function articulos()
     {
-        return $this->hasMany(Articulo::class, 'id');
+        return $this->hasMany(Articulo::class, 'idArticulo');
+    }
+
+    public function lote(){
+        return $this->belongsTo(Lote::class, 'idLote');
+    }
+
+    public function estanteria(){
+        return $this->belongsTo(Estanteria::class, 'identificador');
     }
 }

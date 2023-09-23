@@ -9,7 +9,7 @@ class Articulo extends Model
 {
     use HasFactory;
 
-    public function paquetes(){
+    public function paquete(){
         return $this->belongsTo(Paquete::class, 'idPaquete');
     }
 

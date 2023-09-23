@@ -19,4 +19,9 @@ class Estanteria extends Model
         'apiladoMaximo',
         'idAlmacen'
     ];
+
+    public function paquetes()
+    {
+        return $this->hasMany(Paquete::class, 'idPaquete');
+    }
 }
