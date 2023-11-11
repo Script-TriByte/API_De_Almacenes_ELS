@@ -13,6 +13,11 @@ class Articulo extends Model
         return $this->belongsTo(Paquete::class, 'idPaquete');
     }
 
+    public function tipoArticulos()
+    {
+        return $this->belongsToMany(TipoArticulo::class);
+    }
+
     protected $primaryKey = 'idArticulo';
 
     protected $table = 'articulos';
