@@ -64,3 +64,54 @@ Route::prefix('v2')->group(function ()
         [EstanteriaController::class, "Eliminar"]
     );
 });
+
+Route::prefix('v3')->group(function ()
+{
+    Route::get('/tipoarticulo',
+        [ArticuloController::class, "ObtenerTiposDeArticulo"]
+    );
+
+    Route::post('/articulos',
+        [ArticuloController::class, "Crear"]
+    );
+
+    Route::put('/articulos/{idArticulo}',
+        [ArticuloController::class, "Modificar"]
+    );
+
+    Route::delete('/articulos/{idArticulo}',
+        [ArticuloController::class, "Eliminar"]
+    );
+
+    Route::post('/paquete',
+        [PaqueteController::class, "CrearPaquete"]
+    );
+
+    Route::put('/paquete/{idPaquete}',
+        [PaqueteController::class,"AsignarPeso"]
+    );
+
+    Route::post('/paquete/{idPaquete}/{idEstanteria}',
+        [PaqueteController::class,"AsignarAEstanteria"]
+    );
+
+    Route::post('/lote',
+        [LoteController::class, "CrearLote"]
+    );
+
+    Route::delete('/lote/{idLote}',
+        [LoteController::class, "EliminarLote"]
+    );
+
+    Route::put('/lote/{idLote}/{documentoDeIdentidad}',
+        [LoteController::class,"AsignarLoteAChofer"]
+    );
+
+    Route::post('/estanteria',
+        [EstanteriaController::class, "Crear"]
+    );
+
+    Route::delete('/estanteria/{idEstanteria}',
+        [EstanteriaController::class, "Eliminar"]
+    );
+});
