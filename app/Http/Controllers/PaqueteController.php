@@ -26,6 +26,18 @@ class PaqueteController extends Controller
         DB::raw('LOCK TABLE paquete_estanteria WRITE');
     }
 
+    public function IniciarTransaccion()
+    {
+        $this->BloquearTablas();
+        DB::beginTransaction();
+    }
+
+    public function FinalizarTransaccion()
+    {
+        DB::commit();
+        DB::raw('UNLOCK TABLES');
+    }
+
     public function CrearArticuloPaquete($request, $idAutomatico)
     {
         ArticuloPaquete::create([
@@ -41,12 +53,24 @@ class PaqueteController extends Controller
             "codigo" => $codigoDeBulto
         ]);
     }
+
+    public function InsertarDatos($request, $modeloTablaPaquete)
+    {
+        $modeloTablaPaquete = Paquete::create([
+            "cantidadArticulos" => $request->input("cantidadArticulos"),
+            "peso" => "0"
+        ]);
+
+        $idAutomatico = $modeloTablaPaquete->idPaquete;
+
+        return $idAutomatico;
+    }
     
     public function CrearPaquete(Request $request)
     {
         $validation = Validator::make($request->all(),[
             'idArticulo' => 'required|numeric',
-            'cantidadArticulos' => 'required|numeric',
+            'cantidadArticulos' => 'required|numeric|min:1|max:20',
             'codigoDeBulto' => 'required|numeric'
         ]);
 
@@ -57,23 +81,23 @@ class PaqueteController extends Controller
 
         Articulo::findOrFail($idArticulo);
 
-        $this -> BloquearTablas();
-        DB::beginTransaction();
+        $this->IniciarTransaccion();
 
-        $modeloTablaPaquete = Paquete::create([
-            "cantidadArticulos" => $request->input("cantidadArticulos"),
-            "peso" => "0"
-        ]);
-
-        $idAutomatico = $modeloTablaPaquete->idPaquete;
+        $idAutomatico = $this->InsertarDatos($request, $modeloTablaPaquete);
 
         $this->CrearArticuloPaquete($request, $idAutomatico);
         $this->CrearPaqueteCodigoDeBulto($idAutomatico, $request->input('codigoDeBulto'));
 
-        DB::commit();
-        DB::raw('UNLOCK TABLES');
+        $this->FinalizarTransaccion();
 
         return [ "mensaje" => "Paquete creado correctamente." ];
+    }
+
+
+    public function AsignarDatos($request, $paquete)
+    {
+        $paquete->peso = $request->input("peso");
+        $paquete->save();
     }
 
     public function AsignarPeso(Request $request, $idPaquete)
@@ -88,16 +112,21 @@ class PaqueteController extends Controller
 
         $paquete = Paquete::findOrFail($idPaquete);
 
-        $this -> BloquearTablas();
-        DB::beginTransaction();
+        $this->IniciarTransaccion();
 
-        $paquete->peso = $request->input("peso");
-        $paquete->save();
+        $this->AsignarDatos($request, $paquete);
 
-        DB::commit();
-        DB::raw('UNLOCK TABLES');
+        $this->FinalizarTransaccion();
 
         return [ "mensaje" => "Se ha asignado el peso al Paquete $idPaquete correctamente." ];
+    }
+
+    public function AsignarPaqueteEnEstanteria($idPaquete, $idEstanteria)
+    {
+        PaqueteEstanteria::create([
+            "idPaquete" => $idPaquete,
+            "idEstanteria" => $idEstanteria
+        ]);
     }
 
     public function AsignarAEstanteria(Request $request, $idPaquete, $idEstanteria)
@@ -113,19 +142,19 @@ class PaqueteController extends Controller
         Paquete::findOfFail($idPaquete);
         Estanteria::findOrFail($idEstanteria);
 
-        $this -> BloquearTablas();
-        DB::beginTransaction();
+        $this->IniciarTransaccion();
 
-        PaqueteEstanteria::create([
-            "idPaquete" => $idPaquete,
-            "idEstanteria" => $idEstanteria
-        ]);
+        $this->AsignarPaqueteEnEstanteria($idPaquete, $idEstanteria);
 
         PaqueteLote::where('idPaquete', $idPaquete)->delete();
 
-        DB::commit();
-        DB::raw('UNLOCK TABLES');
+        $this->FinalizarTransaccion();
 
         return [ "mensaje" => "Se ha asignado a la estanteria correctamente." ];
+    }
+
+    public function ListarTodos()
+    {
+        return Paquete::all();
     }
 }
