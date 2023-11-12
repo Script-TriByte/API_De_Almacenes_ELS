@@ -144,4 +144,9 @@ class LoteController extends Controller
 
         return [ "mensaje" => "Se ha asignado el lote al chofer con la CI $documentoDeIdentidad correctamente." ];
     }
+
+    public function ListarTodos()
+    {
+        return Lote::all();
+    }
 }

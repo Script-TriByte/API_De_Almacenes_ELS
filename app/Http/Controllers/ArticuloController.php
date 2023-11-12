@@ -210,4 +210,9 @@ class ArticuloController extends Controller
             return [ "mensaje" => "No se ha podido conectar a la base de datos. Intentelo mas tarde." ];
         }
     }
+
+    public function ListarTodos()
+    {
+        return Articulo::all();
+    }
 }
