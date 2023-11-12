@@ -14,7 +14,28 @@ class EstanteriaController extends Controller
     {
         DB::raw('LOCK TABLE estanterias WRITE');
     }
+
+    public function IniciarTransaccion()
+    {
+        $this->BloquearTablaEstanteria();
+        DB::beginTransaction();
+    }
     
+    public function FinalizarTransaccion()
+    {
+        DB::commit();
+        DB::raw('UNLOCK TABLES');
+    }
+
+    public function InsertarDatos($request)
+    {
+        Estanteria::create([
+            "peso" => $request->input("peso"),
+            "apiladoMaximo" => $request->input("apiladoMaximo"),
+            "idAlmacen" => $request->input("idAlmacen")
+        ]);
+    }
+
     public function Crear(Request $request)
     {
         $validation = Validator::make($request->all(),[
@@ -26,17 +47,11 @@ class EstanteriaController extends Controller
         if($validation->fails())
             return response($validation->errors(), 401);
 
-        $this -> BloquearTablaEstanteria();
-        DB::beginTransaction();
+        $this->IniciarTransaccion();
 
-        Estanteria::create([
-            "peso" => $request->input("peso"),
-            "apiladoMaximo" => $request->input("apiladoMaximo"),
-            "idAlmacen" => $request->input("idAlmacen")
-        ]);
+        $this->InsertarDatos($request);
 
-        DB::commit();
-        DB::raw('UNLOCK TABLES');
+        $this->FinalizarTransaccion();
         
         return [ "mensaje" => "Estanteria creada correctamente." ];
     }
@@ -52,18 +67,13 @@ class EstanteriaController extends Controller
 
         $estanteria = Estanteria::findOrFail($idEstanteria);
 
-        $relacionesConPaquete = PaqueteEstanteria::where('idEstanteria', $idEstanteria)->first();
+        $relacionesConPaquete = PaqueteEstanteria::where('idEstanteria', $idEstanteria)->firstOrFail();
 
-        if($relacionesConPaquete != null)
-            return response([ "mensaje" => "La estanteria a eliminar cuenta con paquetes." ], 401);
-
-        $this -> BloquearTablaEstanteria();
-        DB::beginTransaction();
+        $this->IniciarTransaccion();
 
         $estanteria->delete();
 
-        DB::commit();
-        DB::raw('UNLOCK TABLES');
+        $this->FinalizarTransaccion();
 
         return [ "mensaje" => "Estanteria eliminada correctamente." ];
     }
