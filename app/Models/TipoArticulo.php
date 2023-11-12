@@ -20,6 +20,7 @@ class TipoArticulo extends Model
     protected $table = 'tipoArticulo';
 
     protected $fillable = [
-        'tipo'
+        'tipo',
+        'nombre'
     ];
 }
