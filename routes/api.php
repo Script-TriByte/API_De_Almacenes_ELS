@@ -71,16 +71,24 @@ Route::prefix('v3')->group(function ()
         [ArticuloController::class, "ObtenerTiposDeArticulo"]
     );
 
-    Route::post('/articulos',
+    Route::get('/articulos',
+        [ArticuloController::Class, "ListarTodos"]
+)   ;
+
+    Route::post('/articulo',
         [ArticuloController::class, "Crear"]
     );
 
-    Route::put('/articulos/{idArticulo}',
+    Route::put('/articulo/{idArticulo}',
         [ArticuloController::class, "Modificar"]
     );
 
-    Route::delete('/articulos/{idArticulo}',
+    Route::delete('/articulo/{idArticulo}',
         [ArticuloController::class, "Eliminar"]
+    );
+
+    Route::get('/paquetes',
+        [PaqueteController::class, "ListarTodos"]
     );
 
     Route::post('/paquete',
@@ -93,6 +101,10 @@ Route::prefix('v3')->group(function ()
 
     Route::post('/paquete/{idPaquete}/{idEstanteria}',
         [PaqueteController::class,"AsignarAEstanteria"]
+    );
+
+    Route::get('/lotes',
+        [LoteController::class, "ListarTodos"]
     );
 
     Route::post('/lote',
