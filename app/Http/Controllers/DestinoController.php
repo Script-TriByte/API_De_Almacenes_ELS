@@ -13,6 +13,26 @@ class DestinoController extends Controller
         DB::raw('LOCK TABLE destinos WRITE');
     }
 
+    public function IniciarTransaccion()
+    {
+        $this->BloquearTablaDestino();
+        DB::beginTransaction();
+    }
+
+    public function FinalizarTransaccion()
+    {
+        DB::commit();
+        DB::raw('UNLOCK TABLES');
+    }
+
+    public function InsertarDatos($request)
+    {
+        Destino::create([
+            "direccion" => $request->input('direccion'),
+            "idDepartamento" => $request->input('idDepartamento')
+        ]);
+    }
+
     public function Crear(Request $request)
     {
         $validation = Validator::make($request->all(),[
@@ -23,16 +43,11 @@ class DestinoController extends Controller
         if($validation->fails())
             return response($validation->errors(), 401);
 
-        $this -> BloquearTablaDestino();
-        DB::beginTransaction();
+        $this->IniciarTransaccion();
 
-        Destino::create([
-            "direccion" => $request->input('direccion'),
-            "idDepartamento" => $request->input('idDepartamento')
-        ]);
+        $this->InsertarDatos($request);
 
-        DB::commit();
-        DB::raw('UNLOCK TABLES');
+        $this->FinalizarTransaccion();
 
         return [ "mensaje" => "Destino registrado correctamente." ];
     }
