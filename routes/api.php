@@ -3,6 +3,8 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+use App\Http\Controllers\TipoArticuloController;
+use App\Http\Controllers\ArticuloController;
 use App\Http\Controllers\PaqueteController;
 use App\Http\Controllers\LoteController;
 use App\Http\Controllers\EstanteriaController;
@@ -67,7 +69,11 @@ Route::prefix('v2')->group(function ()
 
 Route::prefix('v3')->group(function ()
 {
-    Route::get('/tipoarticulo',
+    Route::post('/tipoarticulo',
+        [TipoArticuloController::class, "Crear"]
+    );
+
+    Route::get('/tipoarticulo/{idArticulo}',
         [ArticuloController::class, "ObtenerTiposDeArticulo"]
     );
 

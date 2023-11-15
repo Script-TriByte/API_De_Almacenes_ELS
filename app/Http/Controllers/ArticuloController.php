@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
+use Illuminate\Validation\ValidationException;
 
 use App\Models\Articulo;
 use App\Models\TipoArticulo;
@@ -36,7 +37,7 @@ class ArticuloController extends Controller
     public function RelacionarConTipo($idAutomatico, $idTipo)
     {
         try {
-            Articulo_tipoArticulo::create([
+            ArticuloTipoArticulo::create([
                 "idArticulo" => $idAutomatico,
                 "idTipo" => $idTipo
             ]);
@@ -46,13 +47,15 @@ class ArticuloController extends Controller
         }
     }
 
-    public function CrearArticulo($request, $articulo)
+    public function CrearArticulo($request)
     {
         try {
             $articulo = Articulo::create([
                 "nombre" => $request->input("nombre"),
                 "anioCreacion" => $request->input("anioCreacion")
             ]);
+
+            return $articulo;
         }
         catch (QueryException $e) {
             return [ "mensaje" => "No se ha podido conectar a la base de datos. Intentelo mas tarde." ];
@@ -75,7 +78,7 @@ class ArticuloController extends Controller
     
             $this->IniciarTransaccion();
     
-            $this->CrearArticulo($request, $articulo);
+            $articulo = $this->CrearArticulo($request);
     
             $this->RelacionarConTipo($articulo->idArticulo, $tipoArticulo->idTipoArticulo);
     
@@ -139,8 +142,8 @@ class ArticuloController extends Controller
     public function EliminarDatos($articulo, $idArticulo)
     {
         try {
+            ArticuloTipoArticulo::where('idArticulo', $idArticulo)->delete();
             $articulo->delete();
-            Articulo_tipoArticulo::where('idArticulo', $idArticulo)->delete();
         }
         catch (QueryException $e) {
             return [ "mensaje" => "No se ha podido conectar a la base de datos. Intentelo mas tarde." ];
@@ -181,7 +184,7 @@ class ArticuloController extends Controller
     public function IterarTiposDeArticulo($tipoArticuloRelacionado, $tiposDeArticuloQuePosee)
     {
         forEach($tipoArticuloRelacionado as $relacionesConArticulo) {
-            $idTipoArticulo = $relacionesConArticulo->id;
+            $idTipoArticulo = $relacionesConArticulo['idTipo'];
 
             $tipoArticulo = TipoArticulo::findOrFail($idTipoArticulo);
 

@@ -14,7 +14,6 @@ use App\Models\PaqueteCodigoDeBulto;
 use App\Models\Estanteria;
 use App\Models\PaqueteEstanteria;
 
-
 class PaqueteController extends Controller
 {
     public function BloquearTablas()
@@ -92,7 +91,6 @@ class PaqueteController extends Controller
 
         return [ "mensaje" => "Paquete creado correctamente." ];
     }
-
 
     public function AsignarDatos($request, $paquete)
     {
