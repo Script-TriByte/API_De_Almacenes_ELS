@@ -198,9 +198,10 @@ class ArticuloController extends Controller
     {
         try {
             $tipoArticuloRelacionado = ArticuloTipoArticulo::where('idArticulo', $idArticulo)->get();
-            if ($tipoArticuloRelacionado === null)
+            
+            if(!isset($tipoArticuloRelacionado))
                 throw new ModelNotFoundException;
-
+        
             $tiposDeArticuloQuePosee = [];
             $tiposDeArticuloQuePosee = $this->IterarTiposDeArticulo($tipoArticuloRelacionado, $tiposDeArticuloQuePosee);
 
