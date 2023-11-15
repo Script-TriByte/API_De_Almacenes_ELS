@@ -8,6 +8,7 @@ use App\Http\Controllers\ArticuloController;
 use App\Http\Controllers\PaqueteController;
 use App\Http\Controllers\LoteController;
 use App\Http\Controllers\EstanteriaController;
+use App\Http\Controllers\DestinoController;
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
@@ -67,8 +68,12 @@ Route::prefix('v2')->group(function ()
     );
 });
 
-Route::prefix('v3')->group(function ()
+Route::prefix('v3')->middleware("auth:api")->group(function ()
 {
+    Route::post('/destino',
+        [DestinoController::class, "Crear"]
+    );
+
     Route::post('/tipoarticulo',
         [TipoArticuloController::class, "Crear"]
     );
@@ -79,7 +84,7 @@ Route::prefix('v3')->group(function ()
 
     Route::get('/articulos',
         [ArticuloController::Class, "ListarTodos"]
-)   ;
+    );
 
     Route::post('/articulo',
         [ArticuloController::class, "Crear"]
