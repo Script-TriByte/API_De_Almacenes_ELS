@@ -89,8 +89,7 @@ class LoteController extends Controller
     public function EliminarDatos($lote, $idLote)
     {
         $lote->delete();
-        $relacionLotePaquete = PaqueteLote::where('idLote', $idLote)->get();
-        $relacionLotePaquete->delete();
+        $relacionLotePaquete = PaqueteLote::where('idLote', $idLote)->delete();
     }
 
     public function EliminarLote(Request $request, $idLote)

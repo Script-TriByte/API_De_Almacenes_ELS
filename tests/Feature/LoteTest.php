@@ -19,7 +19,7 @@ class LoteTest extends TestCase
     public function test_InsertarLote()
     {
         $datosAInsertar = [
-            "idPaquete" => "1",
+            "idPaquete" => "2",
             "cantidadPaquetes" => "4",
             "idDestino" => "1",
             "idAlmacen" => "1"
@@ -64,6 +64,6 @@ class LoteTest extends TestCase
     {
         $user = User::first();
         $response = $this->actingAs($user, "api")->put('/api/v3/lote/9999/99999999');
-        $response->assertStatus(401); 
+        $response->assertStatus(404); 
     }
 }

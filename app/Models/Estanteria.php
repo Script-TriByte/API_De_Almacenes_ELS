@@ -15,6 +15,7 @@ class Estanteria extends Model
     protected $table = 'estanterias';
 
     protected $fillable = [
+        'identificador',
         'peso',
         'apiladoMaximo',
         'idAlmacen'
