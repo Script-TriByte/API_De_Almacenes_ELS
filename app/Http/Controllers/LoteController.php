@@ -24,12 +24,37 @@ class LoteController extends Controller
         DB::raw('LOCK TABLE paquetes READ');
     }
 
+    public function IniciarTransaccion()
+    {
+        $this->BloquearTablas();
+        DB::beginTransaction();
+    }
+
+    public function FinalizarTransaccion()
+    {
+        DB::commit();
+        DB::raw('UNLOCK TABLES');
+    }
+
     public function CrearPaqueteLote($idAutomatico, $idPaquete)
     {
         PaqueteLote::create([
             "idLote" => $idAutomatico,
             "idPaquete" => $idPaquete
         ]);
+    }
+
+    public function InsertarDatos($request)
+    {
+        $modeloTablaLote = Lote::create([
+            "cantidadPaquetes" => $request->input("cantidadPaquetes"),
+            "idDestino" => $request->input("idDestino"),
+            "idAlmacen" => $request->input("idAlmacen")
+        ]);
+
+        $idAutomatico = $modeloTablaLote->idLote;
+
+        return $idAutomatico;
     }
 
     public function CrearLote(Request $request)
@@ -48,25 +73,24 @@ class LoteController extends Controller
 
         Paquete::findOrFail($idPaquete);
 
-        $this -> BloquearTablas();
-        DB::beginTransaction();
+        $this->IniciarTransaccion();
 
-        $modeloTablaLote = Lote::create([
-            "cantidadPaquetes" => $request->input("cantidadPaquetes"),
-            "idDestino" => $request->input("idDestino"),
-            "idAlmacen" => $request->input("idAlmacen")
-        ]);
-
-        $idAutomatico = $modeloTablaLote->idLote;
+        $idAutomatico = $this->InsertarDatos($request);
 
         $this->CrearPaqueteLote($idAutomatico, $idPaquete);
 
         PaqueteEstanteria::where('idPaquete', $idPaquete)->delete();
 
-        DB::commit();
-        DB::raw('UNLOCK TABLES');
+        $this->FinalizarTransaccion(); 
 
         return [ "mensaje" => "Lote creado correctamente." ];
+    }
+
+    public function EliminarDatos($lote, $idLote)
+    {
+        $lote->delete();
+        $relacionLotePaquete = PaqueteLote::where('idLote', $idLote)->get();
+        $relacionLotePaquete->delete();
     }
 
     public function EliminarLote(Request $request, $idLote)
@@ -80,18 +104,23 @@ class LoteController extends Controller
         
         $lote = Lote::findOrFail($idLote);
 
-        $this -> BloquearTablas();
-        DB::beginTransaction();
+        $this->IniciarTransaccion();
 
-        $lote->delete();
+        $this->EliminarDatos($lote, $idLote);
 
-        $relacionLotePaquete = PaqueteLote::where('idLote', $idLote)->get();
-        $relacionLotePaquete->delete();
-
-        DB::commit();
-        DB::raw('UNLOCK TABLES');
+        $this->FinalizarTransaccion();
 
         return [ "mensaje" => "El lote con el id $idLote fue eliminado correctamente." ];
+    }
+
+    public function AsignarDatosAlChofer($request, $idLote, $documentoDeIdentidad)
+    {
+        VehiculoLoteDestino::create()([
+            "idLote" => $idLote,
+            "fechaEstimada" => $request->input("idDestino"),
+            "horaEstimada" => $request->input("idAlmacen"),
+            "docDeIdentidad" => $documentoDeIdentidad
+        ]);
     }
 
     public function AsignarLoteAChofer(Request $request, $idLote, $documentoDeIdentidad)
@@ -104,23 +133,20 @@ class LoteController extends Controller
         if($validation->fails())
             return response($validation->errors(), 401);
 
-
         Lote::findOrFail($idLote);
         Chofer::findOrFail($documentoDeIdentidad);
 
-        $this -> BloquearTablas();
-        DB::beginTransaction();
+        $this->IniciarTransaccion();
 
-        VehiculoLoteDestino::create()([
-            "idLote" => $idLote,
-            "fechaEstimada" => $request->input("idDestino"),
-            "horaEstimada" => $request->input("idAlmacen"),
-            "docDeIdentidad" => $documentoDeIdentidad
-        ]);
+        $this->AsignarDatosAlChofer($request, $idLote, $documentoDeIdentidad);
 
-        DB::commit();
-        DB::raw('UNLOCK TABLES');
+        $this->FinalizarTransaccion();
 
         return [ "mensaje" => "Se ha asignado el lote al chofer con la CI $documentoDeIdentidad correctamente." ];
+    }
+
+    public function ListarTodos()
+    {
+        return Lote::all();
     }
 }

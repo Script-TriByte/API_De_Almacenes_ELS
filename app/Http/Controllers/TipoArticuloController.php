@@ -6,18 +6,18 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
-use App\Models\Destino;
+use App\Models\TipoArticulo;
 
-class DestinoController extends Controller
+class TipoArticuloController extends Controller
 {
-    public function BloquearTablaDestino()
+    public function BloquearTablaTipo()
     {
-        DB::raw('LOCK TABLE destinos WRITE');
+        DB::raw('LOCK TABLE tipoArticulo WRITE');
     }
 
     public function IniciarTransaccion()
     {
-        $this->BloquearTablaDestino();
+        $this->BloquearTablaTipo();
         DB::beginTransaction();
     }
 
@@ -29,17 +29,17 @@ class DestinoController extends Controller
 
     public function InsertarDatos($request)
     {
-        Destino::create([
-            "direccion" => $request->input('direccion'),
-            "idDepartamento" => $request->input('idDepartamento')
+        TipoArticulo::create([
+            "tipo" => $request->input('tipo'),
+            "nombre" => $request->input('nombre')
         ]);
     }
 
     public function Crear(Request $request)
     {
         $validation = Validator::make($request->all(),[
-            'direccion' => 'required|min:2|max:40|unique:destinos',
-            'idDepartamento' => 'required|numeric'
+            'tipo' => 'required|alpha|min:1|max:1|unique:tipoArticulo',
+            'nombre' => 'required|alpha|min:2'
         ]);
 
         if($validation->fails())
@@ -51,6 +51,6 @@ class DestinoController extends Controller
 
         $this->FinalizarTransaccion();
 
-        return [ "mensaje" => "Destino registrado correctamente." ];
+        return [ "mensaje" => "Tipo de articulo registrado con exito." ];
     }
 }
