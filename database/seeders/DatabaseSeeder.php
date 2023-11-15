@@ -21,6 +21,7 @@ class DatabaseSeeder extends Seeder
         \App\Models\Paquete::factory(1)->create();
         \App\Models\ArticuloPaquete::factory(1)->create();
         \App\Models\Almacen::factory(1)->create();
+        \App\Models\Estanteria::factory(1)->create();
         \App\Models\Modelo::factory(1)->create();
         \App\Models\Vehiculo::factory(1)->create();
         \App\Models\Maneja::factory(1)->create();
