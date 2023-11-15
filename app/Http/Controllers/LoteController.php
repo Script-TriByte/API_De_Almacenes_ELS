@@ -116,8 +116,8 @@ class LoteController extends Controller
     {
         VehiculoLoteDestino::create()([
             "idLote" => $idLote,
-            "fechaEstimada" => $request->input("idDestino"),
-            "horaEstimada" => $request->input("idAlmacen"),
+            "fechaEstimada" => $request->input("fechaEstimada"),
+            "horaEstimada" => $request->input("horaEstimada"),
             "docDeIdentidad" => $documentoDeIdentidad
         ]);
     }
