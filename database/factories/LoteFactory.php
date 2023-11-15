@@ -14,7 +14,6 @@ class LoteFactory extends Factory
     public function definition()
     {
         return [
-            'idLote' => $this->faker->randomNumber(9),
             'cantidadPaquetes' => $this->faker->numberBetween(1, 5),
             'idDestino' => '1',
             'idAlmacen' => '1',
