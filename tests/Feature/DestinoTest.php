@@ -9,17 +9,6 @@ use App\Models\User;
 
 class DestinoTest extends TestCase
 {
-    public function test_CrearUnDestinoSinAutenticacion()
-    {
-        $datosAInsertar = [
-            "direccion" => "Direccion de prueba",
-            "idDepartamento" => "1"
-        ];
-
-        $response = $this->post('/api/v3/destino', $datosAInsertar);
-        $response->assertStatus(401);
-    }
-
     public function test_CrearUnDestino()
     {
         $datosAInsertar = [

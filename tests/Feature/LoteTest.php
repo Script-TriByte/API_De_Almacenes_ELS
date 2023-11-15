@@ -11,7 +11,8 @@ class LoteTest extends TestCase
 {
     public function test_InsertarLoteSinDatos()
     {
-        $response = $this->post('/api/v2/lotes');
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/lote');
         $response->assertStatus(401); 
     }
 
@@ -24,8 +25,8 @@ class LoteTest extends TestCase
             "idAlmacen" => "1"
         ];
 
-        $response = $this->post('/api/v2/lotes', $datosAInsertar);
-
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/lote', $datosAInsertar);
         $response->assertStatus(200);
         $response->assertJsonFragment([
             "mensaje" => "Lote creado correctamente."
@@ -34,22 +35,25 @@ class LoteTest extends TestCase
 
     public function test_EliminarUnLoteQueExiste()
     {
-        $response = $this->delete('/api/v2/lotes/1');
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->delete('/api/v3/lote/1');
         $response->assertStatus(200);
         $response->assertJsonFragment([
-            "mensaje" => "El lote con el id 1 fue eliminado correctamente.."
+            "mensaje" => "El lote con el id 1 fue eliminado correctamente."
         ]);
     }
 
     public function test_EliminarUnLoteQueNoExiste()
     {
-        $response = $this->delete('/api/v2/lotes/9999');
-        $response->assertStatus(401); 
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->delete('/api/v3/lote/9999');
+        $response->assertStatus(404); 
     }
 
     public function test_AsignarUnLoteAUnChoferCorrectamente()
     {
-        $response = $this->put('/api/v2/lotes/1/77777777');
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->put('/api/v3/lote/1/77777777');
         $response->assertStatus(200); 
         $response->assertJsonFragment([
             "mensaje" => "Se ha asignado el lote al chofer con la CI 77777777 correctamente."
@@ -58,7 +62,8 @@ class LoteTest extends TestCase
 
     public function test_AsignarUnLoteAUnChoferConDatosInexistentes()
     {
-        $response = $this->put('/api/v2/lotes/9999/99999999');
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->put('/api/v2/lotes/9999/99999999');
         $response->assertStatus(401); 
     }
 }
