@@ -16,7 +16,7 @@ class PaqueteTest extends TestCase
         ];
 
         $user = User::first();
-        $response = $this->actingAs($user, "api")->put('/api/v1/Paquetes/12165454', $datosAInsertar);
+        $response = $this->actingAs($user, "api")->put('/api/v3/paquete/12165454', $datosAInsertar);
         $response->assertStatus(404); 
     }
 
@@ -27,8 +27,7 @@ class PaqueteTest extends TestCase
         ];
 
         $user = User::first();
-        $response = $this->actingAs($user, "api")->put('/api/v1/Paquetes/1', $datosAInsertar);
-
+        $response = $this->actingAs($user, "api")->put('/api/v3/paquete/1', $datosAInsertar);
         $response->assertStatus(200);
         $response->assertJsonFragment([
             "mensaje" => "Se ha asignado el peso al Paquete 1 correctamente."
@@ -38,8 +37,8 @@ class PaqueteTest extends TestCase
     public function test_InsertarPaqueteSinNada()
     {
         $user = User::first();
-        $response = $this->actingAs($user, "api")->post('/api/v1/Paquetes');
-        $response->assertStatus(404); 
+        $response = $this->actingAs($user, "api")->post('/api/v3/paquete');
+        $response->assertStatus(401); 
     }
 
     public function test_InsertarPaquete()
@@ -51,12 +50,27 @@ class PaqueteTest extends TestCase
         ];
 
         $user = User::first();
-        $response = $this->actingAs($user, "api")->post('/api/v1/Paquetes', $datosAInsertar);
-
+        $response = $this->actingAs($user, "api")->post('/api/v3/paquete', $datosAInsertar);
         $response->assertStatus(200);
         $response->assertJsonFragment([
             "mensaje" => "Paquete creado correctamente."
         ]);
     }
 
+    public function test_AsignarUnPaqueteInexistenteAUnaEstanteria()
+    {
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/paquete/10/1');
+        $response->assertStatus(404); 
+    }
+
+    public function test_AsignarAEstanteria()
+    {
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/paquete/1/1');
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            "mensaje" => "Se ha asignado a la estanteria correctamente."
+        ]);
+    }
 }
