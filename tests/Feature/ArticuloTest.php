@@ -11,6 +11,8 @@ class ArticuloTest extends TestCase
 {
     public function test_CrearUnArticuloConDatosCorrectos()
     {
+        \App\Models\TipoArticulo::factory(1)->create();
+
         $datosAInsertar = [
             "nombre" => "Placeholder",
             "anioCreacion" => "2004",
@@ -92,7 +94,7 @@ class ArticuloTest extends TestCase
     public function test_EliminarUnArticuloInexistente()
     {
         $user = User::first();
-        $response = $this->actingAs($user, "api")->delete('/api/v3/articulo/999');
+        $response = $this->actingAs($user, "api")->delete('/api/v3/articulo/99');
         $response->assertStatus(404);
         $response->assertJsonFragment([
             "mensaje" => "Articulo inexistente."
