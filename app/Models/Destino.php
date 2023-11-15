@@ -14,6 +14,7 @@ class Destino extends Model
     protected $table = 'destinos';
 
     protected $fillable = [
+        'idDestino',
         'direccion',
         'idDepartamento'
     ];

@@ -41,8 +41,6 @@ class EstanteriaTest extends TestCase
         $response->assertJsonFragment([
             "mensaje" => "Estanteria eliminada correctamente."
         ]);
-        
-        Estanteria::withTrashed()->where("identificador", 1)->restore();
     }
 
     public function test_EliminarEstanteriaInexistente()

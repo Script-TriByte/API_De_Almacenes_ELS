@@ -16,7 +16,7 @@ class DestinoTest extends TestCase
             "idDepartamento" => "1"
         ];
 
-        $response = $this->post('/api/v3/destino');
+        $response = $this->post('/api/v3/destino', $datosAInsertar);
         $response->assertStatus(401);
     }
 
@@ -28,7 +28,7 @@ class DestinoTest extends TestCase
         ];
 
         $user = User::first();
-        $response = $this->actingAs($user, "api")->post('/api/v3/destino');
+        $response = $this->actingAs($user, "api")->post('/api/v3/destino', $datosAInsertar);
         $response->assertStatus(200);
         $response->assertJsonFragment([
             "mensaje" => "Destino registrado correctamente."
