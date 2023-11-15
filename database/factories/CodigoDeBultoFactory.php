@@ -14,7 +14,8 @@ class CodigoDeBultoFactory extends Factory
     public function definition()
     {
         return [
-            //
+            'tipo' => 'A',
+            'maximoApilado' => '50',
         ];
     }
 }
