@@ -15,6 +15,7 @@ class PaqueteEstanteria extends Model
     protected $table = 'paquete_estanteria';
 
     protected $fillable = [
+        'idRelacion',
         'idPaquete',
         'idEstanteria'
     ];
