@@ -58,7 +58,7 @@ class EstanteriaController extends Controller
 
     public function Eliminar(Request $request, $idEstanteria)
     {
-        $validation = Validator::make([ 'idEstanteria', $idEstanteria ],[
+        $validation = Validator::make([ 'idEstanteria' => $idEstanteria ],[
             'idEstanteria' => 'required|numeric',
         ]);
 

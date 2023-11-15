@@ -47,7 +47,7 @@ class EstanteriaTest extends TestCase
     public function test_EliminarEstanteriaInexistente()
     {
         $user = User::first();
-        $response = $this->actingAs($user, "api")->delete('/api/v3/estanteria/9999');
+        $response = $this->actingAs($user, "api")->delete('/api/v3/estanteria/9');
         $response->assertStatus(404);
     }
 }
