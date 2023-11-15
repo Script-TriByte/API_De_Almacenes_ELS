@@ -44,6 +44,7 @@ class PaqueteTest extends TestCase
     public function test_InsertarPaquete()
     {
         \App\Models\Articulo::factory(1)->create();
+        \App\Models\CodigoDeBulto::factory(1)->create();
 
         $datosAInsertar = [
             "idArticulo" => "2",

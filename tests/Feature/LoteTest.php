@@ -54,8 +54,9 @@ class LoteTest extends TestCase
 
     public function test_AsignarUnLoteAUnChoferCorrectamente()
     {
+        \App\Models\Lote::factory(1)->create();
         $user = User::first();
-        $response = $this->actingAs($user, "api")->post('/api/v3/lote/1/77777777');
+        $response = $this->actingAs($user, "api")->post('/api/v3/lote/2/77777777');
         $response->assertStatus(200); 
         $response->assertJsonFragment([
             "mensaje" => "Se ha asignado el lote al chofer con la CI 77777777 correctamente."
