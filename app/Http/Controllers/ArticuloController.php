@@ -199,7 +199,7 @@ class ArticuloController extends Controller
         try {
             $tipoArticuloRelacionado = ArticuloTipoArticulo::where('idArticulo', $idArticulo)->get();
             
-            if(!isset($tipoArticuloRelacionado))
+            if(count($tipoArticuloRelacionado) == 0)
                 throw new ModelNotFoundException;
         
             $tiposDeArticuloQuePosee = [];

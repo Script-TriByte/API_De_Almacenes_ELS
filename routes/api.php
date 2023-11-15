@@ -83,7 +83,7 @@ Route::prefix('v3')->middleware("auth:api")->group(function ()
     );
 
     Route::get('/articulos',
-        [ArticuloController::Class, "ListarTodos"]
+        [ArticuloController::class, "ListarTodos"]
     );
 
     Route::post('/articulo',
