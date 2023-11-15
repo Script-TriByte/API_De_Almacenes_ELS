@@ -53,7 +53,7 @@ class PaqueteController extends Controller
         ]);
     }
 
-    public function InsertarDatos($request, $modeloTablaPaquete)
+    public function InsertarDatos($request)
     {
         $modeloTablaPaquete = Paquete::create([
             "cantidadArticulos" => $request->input("cantidadArticulos"),
@@ -82,7 +82,7 @@ class PaqueteController extends Controller
 
         $this->IniciarTransaccion();
 
-        $idAutomatico = $this->InsertarDatos($request, $modeloTablaPaquete);
+        $idAutomatico = $this->InsertarDatos($request);
 
         $this->CrearArticuloPaquete($request, $idAutomatico);
         $this->CrearPaqueteCodigoDeBulto($idAutomatico, $request->input('codigoDeBulto'));

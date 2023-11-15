@@ -74,7 +74,7 @@ class EstanteriaController extends Controller
 
         $relacionesConPaquete = PaqueteEstanteria::where('idEstanteria', $idEstanteria);
 
-        if (count($relacionesConPaquete) != 0)
+        if ($relacionesConPaquete != null)
             $relacionesConPaquete->delete();
 
         $this->FinalizarTransaccion();
