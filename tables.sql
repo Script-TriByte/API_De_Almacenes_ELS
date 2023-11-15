@@ -214,7 +214,7 @@ create table destinos(
 );
 
 create table lotes(
-	idLote int auto_increment primary key,
+	idLote int not null auto_increment primary key,
     cantidadPaquetes int not null,
     idDestino int not null,
     idAlmacen int not null,
