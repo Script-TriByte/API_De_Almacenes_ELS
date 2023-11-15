@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Estanteria;
+use App\Models\PaqueteEstanteria;
 
 class EstanteriaController extends Controller
 {
