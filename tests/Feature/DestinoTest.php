@@ -7,8 +7,6 @@ use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 use App\Models\User;
 
-use App\Models\Destino;
-
 class DestinoTest extends TestCase
 {
     public function test_CrearUnDestinoSinAutenticacion()
@@ -18,7 +16,7 @@ class DestinoTest extends TestCase
             "idDepartamento" => "1"
         ];
 
-        $response = $this->post('/api/v3/destinos');
+        $response = $this->post('/api/v3/destino');
         $response->assertStatus(401);
     }
 
@@ -30,7 +28,7 @@ class DestinoTest extends TestCase
         ];
 
         $user = User::first();
-        $response = $this->actingAs($user, "api")->post('/api/v3/destinos');
+        $response = $this->actingAs($user, "api")->post('/api/v3/destino');
         $response->assertStatus(200);
         $response->assertJsonFragment([
             "mensaje" => "Destino registrado correctamente."
@@ -40,7 +38,7 @@ class DestinoTest extends TestCase
     public function test_CrearUnDestinoSinDatos()
     {
         $user = User::first();
-        $response = $this->actingAs($user, "api")->post('/api/v3/destinos');
+        $response = $this->actingAs($user, "api")->post('/api/v3/destino');
         $response->assertStatus(401);
     }
 }
