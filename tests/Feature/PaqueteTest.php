@@ -46,7 +46,8 @@ class PaqueteTest extends TestCase
         $datosAInsertar = [
             "idArticulo" => "1",
             "cantidadArticulos" => "3",
-            "peso" => "30"
+            "peso" => "30",
+            "codigoDeBulto" => "1"
         ];
 
         $user = User::first();

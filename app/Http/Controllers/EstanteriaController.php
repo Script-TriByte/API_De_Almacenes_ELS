@@ -68,11 +68,14 @@ class EstanteriaController extends Controller
 
         $estanteria = Estanteria::findOrFail($idEstanteria);
 
-        $relacionesConPaquete = PaqueteEstanteria::where('idEstanteria', $idEstanteria)->firstOrFail();
-
         $this->IniciarTransaccion();
 
         $estanteria->delete();
+
+        $relacionesConPaquete = PaqueteEstanteria::where('idEstanteria', $idEstanteria);
+
+        if (count($relacionesConPaquete) != 0)
+            $relacionesConPaquete->delete();
 
         $this->FinalizarTransaccion();
 

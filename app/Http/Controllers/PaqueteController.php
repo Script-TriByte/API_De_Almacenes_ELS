@@ -101,7 +101,6 @@ class PaqueteController extends Controller
     public function AsignarPeso(Request $request, $idPaquete)
     {
         $validation = Validator::make($request->all(),[
-            'idPaquete' => 'required|numeric',
             'peso' => 'required|numeric'
         ]);
 

@@ -18,6 +18,8 @@ class LoteTest extends TestCase
 
     public function test_InsertarLote()
     {
+        \App\Models\Paquete::factory(1)->create();
+
         $datosAInsertar = [
             "idPaquete" => "2",
             "cantidadPaquetes" => "4",
