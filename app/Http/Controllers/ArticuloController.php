@@ -198,16 +198,16 @@ class ArticuloController extends Controller
     {
         try {
             $tipoArticuloRelacionado = ArticuloTipoArticulo::where('idArticulo', $idArticulo)->get();
-            if (count($tipoArticuloRelacionado) == 0)
-                throw new \Exception('Articulo Inexistente.', 404);
+            if ($tipoArticuloRelacionado === null)
+                throw new ModelNotFoundException;
 
             $tiposDeArticuloQuePosee = [];
             $tiposDeArticuloQuePosee = $this->IterarTiposDeArticulo($tipoArticuloRelacionado, $tiposDeArticuloQuePosee);
 
             return $tiposDeArticuloQuePosee;
         }
-        catch (\Exception $e){
-            return [ "mensaje" => $e->getMessage() ];
+        catch (ModelNotFoundException $e){
+            return response([ "mensaje" => "Articulo inexistente." ], 404);
         }
         catch (QueryException $e) {
             return [ "mensaje" => "No se ha podido conectar a la base de datos. Intentelo mas tarde." ];
