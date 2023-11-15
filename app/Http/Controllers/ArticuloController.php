@@ -74,7 +74,7 @@ class ArticuloController extends Controller
             if($validation->fails())
                 throw new ValidationException($validation);
     
-            $tipoArticulo = tipoArticulo::where('tipo', $request->input('tipo'))->firstOrFail();
+            $tipoArticulo = TipoArticulo::where('tipo', $request->input('tipo'))->firstOrFail();
     
             $this->IniciarTransaccion();
     
