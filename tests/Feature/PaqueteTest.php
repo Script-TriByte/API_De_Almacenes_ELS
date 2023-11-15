@@ -43,8 +43,10 @@ class PaqueteTest extends TestCase
 
     public function test_InsertarPaquete()
     {
+        \App\Models\Articulo::factory(1)->create();
+
         $datosAInsertar = [
-            "idArticulo" => "1",
+            "idArticulo" => "2",
             "cantidadArticulos" => "3",
             "peso" => "30",
             "codigoDeBulto" => "1"
@@ -67,8 +69,10 @@ class PaqueteTest extends TestCase
 
     public function test_AsignarAEstanteria()
     {
+        \App\Models\Estanteria::factory(1)->create();
+
         $user = User::first();
-        $response = $this->actingAs($user, "api")->post('/api/v3/paquete/1/1');
+        $response = $this->actingAs($user, "api")->post('/api/v3/paquete/1/2');
         $response->assertStatus(200);
         $response->assertJsonFragment([
             "mensaje" => "Se ha asignado a la estanteria correctamente."

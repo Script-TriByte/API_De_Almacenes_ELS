@@ -55,7 +55,7 @@ class LoteTest extends TestCase
     public function test_AsignarUnLoteAUnChoferCorrectamente()
     {
         $user = User::first();
-        $response = $this->actingAs($user, "api")->put('/api/v3/lote/1/77777777');
+        $response = $this->actingAs($user, "api")->post('/api/v3/lote/1/77777777');
         $response->assertStatus(200); 
         $response->assertJsonFragment([
             "mensaje" => "Se ha asignado el lote al chofer con la CI 77777777 correctamente."
@@ -65,7 +65,7 @@ class LoteTest extends TestCase
     public function test_AsignarUnLoteAUnChoferConDatosInexistentes()
     {
         $user = User::first();
-        $response = $this->actingAs($user, "api")->put('/api/v3/lote/9999/99999999');
+        $response = $this->actingAs($user, "api")->post('/api/v3/lote/9999/99999999');
         $response->assertStatus(404); 
     }
 }

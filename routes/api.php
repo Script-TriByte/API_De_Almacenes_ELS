@@ -126,7 +126,7 @@ Route::prefix('v3')->middleware("auth:api")->group(function ()
         [LoteController::class, "EliminarLote"]
     );
 
-    Route::put('/lote/{idLote}/{documentoDeIdentidad}',
+    Route::post('/lote/{idLote}/{documentoDeIdentidad}',
         [LoteController::class,"AsignarLoteAChofer"]
     );
 
