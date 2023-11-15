@@ -137,7 +137,7 @@ class PaqueteController extends Controller
         if($validation->fails())
             return response($validation->errors(), 401);
 
-        Paquete::findOfFail($idPaquete);
+        Paquete::findOrFail($idPaquete);
         Estanteria::findOrFail($idEstanteria);
 
         $this->IniciarTransaccion();

@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\Lote;
+use App\Models\User;
 
 class LoteTest extends TestCase
 {
@@ -63,7 +63,7 @@ class LoteTest extends TestCase
     public function test_AsignarUnLoteAUnChoferConDatosInexistentes()
     {
         $user = User::first();
-        $response = $this->actingAs($user, "api")->put('/api/v2/lotes/9999/99999999');
+        $response = $this->actingAs($user, "api")->put('/api/v3/lote/9999/99999999');
         $response->assertStatus(401); 
     }
 }
