@@ -114,7 +114,7 @@ class LoteController extends Controller
 
     public function AsignarDatosAlChofer($request, $idLote, $documentoDeIdentidad)
     {
-        VehiculoLoteDestino::create()([
+        VehiculoLoteDestino::create([
             "idLote" => $idLote,
             "fechaEstimada" => $request->input("fechaEstimada"),
             "horaEstimada" => $request->input("horaEstimada"),
