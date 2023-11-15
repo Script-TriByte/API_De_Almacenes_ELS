@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\Paquete;
+use App\Models\User;
 
 class PaqueteTest extends TestCase
 {
@@ -15,7 +15,8 @@ class PaqueteTest extends TestCase
             "peso" => "50"
         ];
 
-        $response = $this->put('/api/v1/Paquetes/12165454', $datosAInsertar);
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->put('/api/v1/Paquetes/12165454', $datosAInsertar);
         $response->assertStatus(404); 
     }
 
@@ -25,7 +26,8 @@ class PaqueteTest extends TestCase
             "peso" => "30",
         ];
 
-        $response = $this->put('/api/v1/Paquetes/1', $datosAInsertar);
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->put('/api/v1/Paquetes/1', $datosAInsertar);
 
         $response->assertStatus(200);
         $response->assertJsonFragment([
@@ -35,7 +37,8 @@ class PaqueteTest extends TestCase
 
     public function test_InsertarPaqueteSinNada()
     {
-        $response = $this->post('/api/v1/Paquetes');
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v1/Paquetes');
         $response->assertStatus(404); 
     }
 
@@ -47,7 +50,8 @@ class PaqueteTest extends TestCase
             "peso" => "30"
         ];
 
-        $response = $this->post('/api/v1/Paquetes', $datosAInsertar);
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v1/Paquetes', $datosAInsertar);
 
         $response->assertStatus(200);
         $response->assertJsonFragment([
