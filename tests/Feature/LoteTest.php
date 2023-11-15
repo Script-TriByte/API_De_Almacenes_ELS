@@ -57,7 +57,7 @@ class LoteTest extends TestCase
         \App\Models\Lote::factory(1)->create();
         $user = User::first();
         $response = $this->actingAs($user, "api")->post('/api/v3/lote/2/77777777', [
-            "fechaEstimada" => "15-11-2023",
+            "fechaEstimada" => "2023-11-15",
             "horaEstimada" => "20:15:00"
         ]);
         $response->assertStatus(200); 
