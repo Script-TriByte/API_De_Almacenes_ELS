@@ -15,6 +15,7 @@ class VehiculoLoteDestino extends Model
     protected $table = 'vehiculo_lote_destino';
 
     protected $fillable = [
+        'idLote',
         'fechaEstimada',
         'horaEstimada',
         'docDeIdentidad'

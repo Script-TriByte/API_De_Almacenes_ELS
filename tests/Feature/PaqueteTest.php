@@ -5,7 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-use App\Models\Paquete;
+use App\Models\User;
 
 class PaqueteTest extends TestCase
 {
@@ -15,7 +15,8 @@ class PaqueteTest extends TestCase
             "peso" => "50"
         ];
 
-        $response = $this->put('/api/v1/Paquetes/12165454', $datosAInsertar);
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->put('/api/v3/paquete/12165454', $datosAInsertar);
         $response->assertStatus(404); 
     }
 
@@ -25,8 +26,8 @@ class PaqueteTest extends TestCase
             "peso" => "30",
         ];
 
-        $response = $this->put('/api/v1/Paquetes/1', $datosAInsertar);
-
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->put('/api/v3/paquete/1', $datosAInsertar);
         $response->assertStatus(200);
         $response->assertJsonFragment([
             "mensaje" => "Se ha asignado el peso al Paquete 1 correctamente."
@@ -35,24 +36,47 @@ class PaqueteTest extends TestCase
 
     public function test_InsertarPaqueteSinNada()
     {
-        $response = $this->post('/api/v1/Paquetes');
-        $response->assertStatus(404); 
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/paquete');
+        $response->assertStatus(401); 
     }
 
     public function test_InsertarPaquete()
     {
+        \App\Models\Articulo::factory(1)->create();
+        \App\Models\CodigoDeBulto::factory(1)->create();
+
         $datosAInsertar = [
-            "idArticulo" => "1",
+            "idArticulo" => "2",
             "cantidadArticulos" => "3",
-            "peso" => "30"
+            "peso" => "30",
+            "codigoDeBulto" => "1"
         ];
 
-        $response = $this->post('/api/v1/Paquetes', $datosAInsertar);
-
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/paquete', $datosAInsertar);
         $response->assertStatus(200);
         $response->assertJsonFragment([
             "mensaje" => "Paquete creado correctamente."
         ]);
     }
 
+    public function test_AsignarUnPaqueteInexistenteAUnaEstanteria()
+    {
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/paquete/10/1');
+        $response->assertStatus(404); 
+    }
+
+    public function test_AsignarAEstanteria()
+    {
+        \App\Models\Estanteria::factory(1)->create();
+
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/paquete/1/2');
+        $response->assertStatus(200);
+        $response->assertJsonFragment([
+            "mensaje" => "Se ha asignado a la estanteria correctamente."
+        ]);
+    }
 }

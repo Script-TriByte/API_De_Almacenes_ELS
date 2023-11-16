@@ -89,8 +89,7 @@ class LoteController extends Controller
     public function EliminarDatos($lote, $idLote)
     {
         $lote->delete();
-        $relacionLotePaquete = PaqueteLote::where('idLote', $idLote)->get();
-        $relacionLotePaquete->delete();
+        $relacionLotePaquete = PaqueteLote::where('idLote', $idLote)->delete();
     }
 
     public function EliminarLote(Request $request, $idLote)
@@ -115,10 +114,10 @@ class LoteController extends Controller
 
     public function AsignarDatosAlChofer($request, $idLote, $documentoDeIdentidad)
     {
-        VehiculoLoteDestino::create()([
+        VehiculoLoteDestino::create([
             "idLote" => $idLote,
-            "fechaEstimada" => $request->input("idDestino"),
-            "horaEstimada" => $request->input("idAlmacen"),
+            "fechaEstimada" => $request->input("fechaEstimada"),
+            "horaEstimada" => $request->input("horaEstimada"),
             "docDeIdentidad" => $documentoDeIdentidad
         ]);
     }

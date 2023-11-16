@@ -53,7 +53,7 @@ class PaqueteController extends Controller
         ]);
     }
 
-    public function InsertarDatos($request, $modeloTablaPaquete)
+    public function InsertarDatos($request)
     {
         $modeloTablaPaquete = Paquete::create([
             "cantidadArticulos" => $request->input("cantidadArticulos"),
@@ -82,7 +82,7 @@ class PaqueteController extends Controller
 
         $this->IniciarTransaccion();
 
-        $idAutomatico = $this->InsertarDatos($request, $modeloTablaPaquete);
+        $idAutomatico = $this->InsertarDatos($request);
 
         $this->CrearArticuloPaquete($request, $idAutomatico);
         $this->CrearPaqueteCodigoDeBulto($idAutomatico, $request->input('codigoDeBulto'));
@@ -101,7 +101,6 @@ class PaqueteController extends Controller
     public function AsignarPeso(Request $request, $idPaquete)
     {
         $validation = Validator::make($request->all(),[
-            'idPaquete' => 'required|numeric',
             'peso' => 'required|numeric'
         ]);
 
@@ -137,7 +136,7 @@ class PaqueteController extends Controller
         if($validation->fails())
             return response($validation->errors(), 401);
 
-        Paquete::findOfFail($idPaquete);
+        Paquete::findOrFail($idPaquete);
         Estanteria::findOrFail($idEstanteria);
 
         $this->IniciarTransaccion();

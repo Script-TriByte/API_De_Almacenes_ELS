@@ -5,8 +5,7 @@ namespace Tests\Feature;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
-
-use App\Models\Destino;
+use App\Models\User;
 
 class DestinoTest extends TestCase
 {
@@ -17,19 +16,18 @@ class DestinoTest extends TestCase
             "idDepartamento" => "1"
         ];
 
-        $response = $this->post('/api/v2/destinos');
-
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/destino', $datosAInsertar);
         $response->assertStatus(200);
         $response->assertJsonFragment([
             "mensaje" => "Destino registrado correctamente."
         ]);
-
-        Destino::where('direccion', 'Direccion de prueba')->delete();
     }
 
     public function test_CrearUnDestinoSinDatos()
     {
-        $response = $this->post('/api/v2/destinos');
+        $user = User::first();
+        $response = $this->actingAs($user, "api")->post('/api/v3/destino');
         $response->assertStatus(401);
     }
 }

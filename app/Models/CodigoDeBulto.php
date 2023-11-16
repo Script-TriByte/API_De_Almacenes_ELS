@@ -5,17 +5,17 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Destino extends Model
+class CodigoDeBulto extends Model
 {
     use HasFactory;
 
-    protected $primaryKey = 'idDestino';
+    protected $primaryKey = 'codigo';
 
-    protected $table = 'destinos';
+    protected $table = 'codigoDeBulto';
 
     protected $fillable = [
-        'idDestino',
-        'direccion',
-        'idDepartamento'
+        'codigo',
+        'tipo',
+        'maximoApilado'
     ];
 }

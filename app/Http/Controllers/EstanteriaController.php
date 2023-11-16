@@ -7,6 +7,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 
 use App\Models\Estanteria;
+use App\Models\PaqueteEstanteria;
 
 class EstanteriaController extends Controller
 {
@@ -58,7 +59,7 @@ class EstanteriaController extends Controller
 
     public function Eliminar(Request $request, $idEstanteria)
     {
-        $validation = Validator::make([ 'idEstanteria', $idEstanteria ],[
+        $validation = Validator::make([ 'idEstanteria' => $idEstanteria ],[
             'idEstanteria' => 'required|numeric',
         ]);
 
@@ -67,11 +68,14 @@ class EstanteriaController extends Controller
 
         $estanteria = Estanteria::findOrFail($idEstanteria);
 
-        $relacionesConPaquete = PaqueteEstanteria::where('idEstanteria', $idEstanteria)->firstOrFail();
-
         $this->IniciarTransaccion();
 
         $estanteria->delete();
+
+        $relacionesConPaquete = PaqueteEstanteria::where('idEstanteria', $idEstanteria);
+
+        if ($relacionesConPaquete != null)
+            $relacionesConPaquete->delete();
 
         $this->FinalizarTransaccion();
 
