@@ -66,6 +66,8 @@ class ArticuloTest extends TestCase
 
     public function test_ObtenerTipoDeArticuloDeUnoExistente()
     {
+        \App\Models\ArticuloTipoArticulo::factory(1)->create();
+
         $user = User::first();
         $response = $this->actingAs($user, "api")->get('/api/v3/tipoarticulo/1');
         $response->assertStatus(200);
